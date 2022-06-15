@@ -12,17 +12,13 @@ const store = useStore();
 const storage = useStorageStore();
 const {genres} = storeToRefs(store);
 const {fetchAllMovies} = store;
-let selectedGenre = [];
+let selectedGenre = ref([]);
 const getGenres = computed(() => {
     return store.getGenres;
 })
-defineProps({
-  modelValue : Boolean
-});
 
-function onChange($event){
-  selectedGenre = $event
-  storage.setSelectedGenres(selectedGenre.join(', '));
+function onChange(){
+  storage.setSelectedGenres(selectedGenre.value.join(', '));
 }
 const fetchByGenre = () => {
  storage.setCurrentPage(1);
@@ -36,8 +32,8 @@ const fetchByGenre = () => {
 	<AccordionTab header="Filter By Genre">
   <div class="grid">
     <div class="col-5 md:col-4 lg:col-8" v-for="genre in getGenres" :key="genre">
-      <CheckBox :name="genre.id" :value="genre.id" v-model="modelValue"
-       @input="onChange($event)"
+      <CheckBox name="genres" :value="genre.id" v-model="selectedGenre"
+      @change="onChange"
       /> {{genre.name}}
     </div>
   </div>

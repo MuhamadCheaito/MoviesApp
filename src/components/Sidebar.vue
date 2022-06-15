@@ -9,6 +9,6 @@ import FilterButton from './FilterButton.vue';
 <template>
     <aside class="sidebar-main">
         <search-bar></search-bar>
-        <filter-list></filter-list>
+        <filter-list :checked="false"></filter-list>
     </aside>
 </template>
