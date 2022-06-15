@@ -17,7 +17,7 @@ const getGenres = computed(() => {
     return store.getGenres;
 })
 defineProps({
-  checked : Boolean
+  modelValue : Boolean
 });
 
 function onChange($event){
@@ -36,7 +36,7 @@ const fetchByGenre = () => {
 	<AccordionTab header="Filter By Genre">
   <div class="grid">
     <div class="col-5 md:col-4 lg:col-8" v-for="genre in getGenres" :key="genre">
-      <CheckBox :name="genre.id" :value="genre.id" v-model="checked"
+      <CheckBox :name="genre.id" :value="genre.id" v-model="modelValue"
        @input="onChange($event)"
       /> {{genre.name}}
     </div>
