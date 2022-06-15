@@ -6,24 +6,23 @@ import { useStore } from '../store';
 import { storeToRefs } from 'pinia';
 import { computed, ref } from 'vue';
 import FilterButton from './FilterButton.vue';
-import { useStorageStore } from '../store/storage';
 
 const store = useStore();
-const storage = useStorageStore();
-const {genres} = storeToRefs(store);
-const {fetchAllMovies} = store;
-let selectedGenre = ref([]);
+const {genres,selectedGenres,currentPage} = storeToRefs(store);
+const {fetchAllMovies,resetCurrentPage,setSelectedGenres} = store;
+
 const getGenres = computed(() => {
     return store.getGenres;
 })
 
 function onChange(){
-  storage.setSelectedGenres(selectedGenre.value.join(', '));
+  setSelectedGenres(selectedGenres.value);
 }
 const fetchByGenre = () => {
- storage.setCurrentPage(1);
- fetchAllMovies(localStorage.getItem(storage.CURRENT_PAGE),
-                localStorage.getItem(storage.SELECTED_GENRES));
+ resetCurrentPage();   
+ fetchAllMovies(currentPage.value + 1,
+                selectedGenres.value.join(', '));
+                
 }
 </script>
 
@@ -32,12 +31,12 @@ const fetchByGenre = () => {
 	<AccordionTab header="Filter By Genre">
   <div class="grid">
     <div class="col-5 md:col-4 lg:col-8" v-for="genre in getGenres" :key="genre">
-      <CheckBox name="genres" :value="genre.id" v-model="selectedGenre"
+      <CheckBox name="genres" :value="genre.id" v-model="selectedGenres"
       @change="onChange"
       /> {{genre.name}}
     </div>
   </div>
-    <filter-button v-on:click="fetchByGenre()"/>
+    <filter-button @click="fetchByGenre()"/>
 	</AccordionTab>
   </Accordion>
 </template>

@@ -15,6 +15,7 @@ import HomePage from './pages/HomePage.vue';
   padding:0;
   margin:0;
 }
+
 #feed{
   text-align: center;
 }

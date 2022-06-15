@@ -3,24 +3,22 @@ import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
 import { useStore } from '../store';
 import { ref } from 'vue';
-import { useStorageStore } from '../store/storage';
+import { storeToRefs } from 'pinia';
 
 const store = useStore();
-const storage = useStorageStore();
-let searchTerm = ref("");
 
-const {fetchSearchMovies,fetchAllMovies} = store;
+const {currentPage,selectedGenres,searchTerm} = storeToRefs(store);
+
+const {fetchSearchMovies,fetchAllMovies,resetCurrentPage} = store;
 
 function fetchSearchTerm()
-{
-    storage.setSearch(searchTerm.value);
-    storage.setCurrentPage(1);
-    if(localStorage.getItem(storage.SEARCH_TERM) !== "")
-        fetchSearchMovies(localStorage.getItem(storage.CURRENT_PAGE),
-                          localStorage.getItem(storage.SEARCH_TERM));
+{   
+    resetCurrentPage();
+    const apiPage = currentPage.value + 1
+    if(searchTerm.value !== "")
+        fetchSearchMovies(apiPage, searchTerm.value);
     else
-        fetchAllMovies(localStorage.getItem(storage.CURRENT_PAGE),
-                       localStorage.getItem(storage.SELECTED_GENRES))
+        fetchAllMovies(apiPage,selectedGenres.value)
     
 }
 </script>

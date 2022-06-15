@@ -1,31 +1,29 @@
 <script setup>
 import { storeToRefs } from "pinia";
-import {  onMounted } from "vue";
+import {  computed, onMounted, ref } from "vue";
 import { useStore } from "../store";
-import {useStorageStore} from '../store/storage'
 import MovieCard from "./MovieCard.vue";
 import Paginator from 'primevue/paginator';
 
 const store = useStore();
-const storage = useStorageStore();
 
-const {fetchAllMovies,fetchAllGenres,fetchSearchMovies} = store;
-
-const {moviesList} = storeToRefs(store);
+const {fetchAllMovies,fetchAllGenres,fetchSearchMovies,setCurrentPage,resetCurrentPage} = store;
+const {moviesList,currentPage,searchTerm,selectedGenres} = storeToRefs(store);
 
 function onPage(event) {
-   storage.setCurrentPage(event.page + 1);
-   if(localStorage.getItem(storage.SEARCH_TERM) !== ""){
-        fetchSearchMovies(localStorage.getItem(storage.CURRENT_PAGE),
-                          localStorage.getItem(storage.SEARCH_TERM))
+   setCurrentPage(event.page)
+   const apiPage = currentPage.value + 1
+   if(searchTerm.value !== ""){
+        fetchSearchMovies(apiPage,searchTerm.value)
    }
    else
-        fetchAllMovies(localStorage.getItem(storage.CURRENT_PAGE),
-                       localStorage.getItem(storage.SELECTED_GENRES));
+        fetchAllMovies(apiPage,selectedGenres.value);
 }
+const getOffset = computed(() => {
+    return currentPage.value * 10
+})
 onMounted(() => {
-    storage.init();
-    fetchAllMovies(localStorage.getItem(storage.CURRENT_PAGE));
+    fetchAllMovies(1);
     fetchAllGenres();
 })
 
@@ -39,7 +37,7 @@ onMounted(() => {
             <movie-card :movie="movie"></movie-card> 
         </div>
         </div>
-        <Paginator :rows="10" :totalRecords="moviesList.total_pages > 1000 ? moviesList.total_pages/100 : moviesList.total_pages" 
+        <Paginator v-model:first="getOffset" :rows="10" :totalRecords="moviesList.total_pages > 1000 ? moviesList.total_pages/10 : moviesList.total_pages" 
         @page="onPage($event)"></Paginator>
     </section>
 </template>

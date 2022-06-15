@@ -7,7 +7,10 @@ export const useStore = defineStore('main', {
         return {
             moviesList:[],
             genres:[],
-            externalIds:[]
+            externalIds:[],
+            currentPage: 0,
+            searchTerm: '',
+            selectedGenres: [],
         }
     },
     getters:{
@@ -19,7 +22,7 @@ export const useStore = defineStore('main', {
         }
     },
     actions:{
-        async fetchAllMovies(currentPage,genres){
+        async fetchAllMovies(currentPage,genres) {
             const data = await api.get(`/discover/movie?api_key=${API_KEY}&page=${currentPage}&with_genres=${genres}`,{
                 params:{
                     language:"en-US",
@@ -45,5 +48,17 @@ export const useStore = defineStore('main', {
                                   .then(res => res.data);
             this.genres = data;
         },
+        async resetCurrentPage(){
+            this.setCurrentPage(0);
+        },
+        async setCurrentPage(currentPage){
+            this.currentPage = currentPage
+        },
+        async setSearchTerm (searchTerm){
+            this.searchTerm = searchTerm
+        },
+        async setSelectedGenres (selectedGenres){
+            this.selectedGenres = selectedGenres
+        }
     }
 })
