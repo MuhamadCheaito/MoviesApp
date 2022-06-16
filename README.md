@@ -1,4 +1,5 @@
 # Assignment
 
 ## Deployment Link
-https://movies-edgfksfky-muhamadcheaito.vercel.app/
+https://movies-app-sooty.vercel.app
+
