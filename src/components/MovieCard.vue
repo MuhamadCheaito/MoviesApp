@@ -41,7 +41,7 @@ const fetchAllExternalIds = (movie_id) => {
         {{ movie.title }} ({{movie.release_date.substr(0,4)}})
     </template>
     <template #content>
-        <read-more :overview="movie.overview" />
+      <read-more v-show="movie.overview !== ''" :overview="movie.overview" />
     </template>
     <template #footer>
     <div class="bottom">
