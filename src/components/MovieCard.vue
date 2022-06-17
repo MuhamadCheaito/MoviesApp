@@ -5,6 +5,7 @@ import { useStore } from "../store";
 import Button from 'primevue/button';
 import Card from 'primevue/card';
 import Image from 'primevue/image'
+import ReadMore from "./ReadMore.vue";
 
 const store = useStore();
 const props = defineProps({
@@ -40,7 +41,7 @@ const fetchAllExternalIds = (movie_id) => {
         {{ movie.title }} ({{movie.release_date.substr(0,4)}})
     </template>
     <template #content>
-        {{ movie.overview }}
+        <read-more :overview="movie.overview" />
     </template>
     <template #footer>
     <div class="bottom">
